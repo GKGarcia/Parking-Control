@@ -7,13 +7,13 @@ namespace Estacionamento_console.Entities
     internal class Driver
     {
 
-        public string Nome { get; set; }
+        public string Name { get; set; }
         public string Cpf { get; set; }
 
         public Driver() { } 
-        public Driver(string nome, string cpf)
+        public Driver(string name, string cpf)
         {
-            Nome = nome;
+            Name = name;
             Cpf = cpf;
         }
 
