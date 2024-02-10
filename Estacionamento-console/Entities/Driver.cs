@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 
 
+
 namespace Estacionamento_console.Entities
 {
+
+
     internal class Driver
     {
+        
 
         public string Name { get; set; }
         public string Cpf { get; set; }
@@ -17,7 +21,8 @@ namespace Estacionamento_console.Entities
             Cpf = cpf;
         }
 
-        
+   
+
 
         
         
