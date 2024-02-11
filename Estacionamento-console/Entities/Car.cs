@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Net;
+using System.Xml;
 using Estacionamento_console;
 using Estacionamento_console.Entities.Enums;
 
@@ -8,14 +9,15 @@ namespace Estacionamento_console.Entities
 {
     internal class Car : Driver
     {
-      
+
         public string Model { get; set; }
         Color Color { get; set; }
         public string Plate { get; set; }
-
         public string EntryTime { get; set; }
         public string ExitTime { get; set; }
         List<Car> list = new List<Car>();
+
+
         public Car() { }
 
         public Car(string name, string cpf, string model, Color color, string plate) : base(name, cpf)
@@ -23,7 +25,7 @@ namespace Estacionamento_console.Entities
             Model = model;
             Color = color;
             Plate = plate;
-            entrytime();
+            Entrytime();
         }
 
         public void Menu()
@@ -36,16 +38,24 @@ namespace Estacionamento_console.Entities
             Console.WriteLine("5- Listar Veiculos");
             Console.WriteLine("6- SAIR");
             Console.Write("Digite uma opção:");
-            
-
-          
         }
-       public void CadastrarMoto()
+
+        public void Entrytime()
+        {
+            EntryTime = DateTime.Now.ToString();
+            Console.WriteLine(EntryTime);
+        }
+
+        public void RegisterExit()
+        {
+            ExitTime = DateTime.Now.ToString();
+        }
+
+        public void RegisterDriver()
         {
             Console.WriteLine("CADASTRO DE MOTORISTA:");
             Console.WriteLine();
             Console.WriteLine("Digite o nome do motorista:");
-
             string Name = Console.ReadLine();
             Console.WriteLine("Digite o CPF do motorista:");
             string Cpf = Console.ReadLine();
@@ -59,8 +69,6 @@ namespace Estacionamento_console.Entities
 
             list.Add(new Car(Name, Cpf, Model, Color, Plate));
 
-
-
             Console.WriteLine();
             Console.WriteLine("Veiculo Cadastrado!");
 
@@ -68,36 +76,47 @@ namespace Estacionamento_console.Entities
             Console.Clear();
         }
 
-        public void veiculosestacionados()
+        public void ParkedVehicles()
         {
+            int aux = list.Count;
+
             Console.WriteLine("VEICULOS ESTACIONADOS:");
             Console.WriteLine();
 
-
-            foreach (var obj in list)
+            if (list.Count != 0)
             {
-
-                if (obj.ExitTime == null)
+                foreach (var obj in list)
                 {
-                    Console.WriteLine(obj);
-
-
-                    Console.WriteLine();
+                    if (obj.ExitTime == null)
+                    {
+                        Console.WriteLine(obj);
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        aux--;
+                    }
+                    if (aux == 0)
+                    {
+                        Console.WriteLine("Nenhum veiculo estacionado!");
+                    }
                 }
-
             }
-
-
+            else
+            {
+                Console.WriteLine("Nenhum veiculo estacionado!");
+            }
 
             Console.ReadKey();
             Console.Clear();
         }
 
-        public void RegistrarSaida()
+        public void Exit()
         {
             Console.WriteLine("Digite o nome do motorista ou a placa do carro:");
             string Exit = Console.ReadLine();
             Console.WriteLine();
+
             foreach (var obj in list)
             {
                 if (Exit == obj.Plate && obj.ExitTime == null || Exit == obj.Name && obj.ExitTime == null)
@@ -115,7 +134,6 @@ namespace Estacionamento_console.Entities
                     {
                         Console.WriteLine("Saida Registrada!");
                         obj.RegisterExit();
-
                     }
                     else
                     {
@@ -124,17 +142,17 @@ namespace Estacionamento_console.Entities
 
                     Console.ReadKey();
                     Console.Clear();
-
                 }
             }
-            Console.WriteLine();
 
+            Console.WriteLine();
         }
 
-        public void buscarveiculos()
+        public void SearchVehicles()
         {
             Console.WriteLine("Digite o nome do motorista ou a placa do carro:");
             string search = Console.ReadLine();
+
             foreach (var obj in list)
             {
                 if (search == obj.Name || search == obj.Plate)
@@ -151,38 +169,40 @@ namespace Estacionamento_console.Entities
             }
         }
 
-        public void listarveiculos()
+        public void ListVehicles()
         {
+            int aux = list.Count;
+
             Console.WriteLine("Lista de Veiculos:");
             Console.WriteLine();
 
-            foreach (var obj in list)
+            if (list.Count != 0)
             {
-                if (obj.ExitTime != null)
+                foreach (var obj in list)
                 {
-                    Console.WriteLine(obj);
-                    Console.WriteLine("Horario de saida:" + obj.ExitTime);
-                    Console.WriteLine();
+                    if (obj.ExitTime != null)
+                    {
+                        Console.WriteLine(obj);
+                        Console.WriteLine("Horario de saida:" + obj.ExitTime);
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        aux--;
+                    }
+                    if (aux == 0)
+                    {
+                        Console.WriteLine("Nenhuma Saida Registrada!");
+                    }
                 }
-                else
-                {
-                    Console.WriteLine("Saidas de veiculos ainda não registrada!");
-                }
-
+            }
+            else 
+            {
+                Console.WriteLine("Nenhuma Saida Registrad!"); 
             }
 
             Console.ReadKey();
             Console.Clear();
-        }
-
-        public void entrytime()
-        {
-            EntryTime = DateTime.Now.ToString();
-            Console.WriteLine(EntryTime);
-        }
-        public Car(string exittime)
-        {
-            ExitTime = exittime;
         }
 
         public override string ToString()
@@ -194,13 +214,10 @@ namespace Estacionamento_console.Entities
                    "CPF:" + Cpf + "\n" +
                    "Data e Horario de Entrada:" +
                    EntryTime;
-
         }
 
-        public void RegisterExit()
-        {
-            ExitTime= DateTime.Now.ToString();
-        }
-        
+
+
+
     }
 }

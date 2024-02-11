@@ -3,7 +3,7 @@ using Estacionamento_console.Entities.Enums;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
+
 
 
 namespace Estacionamento_console
@@ -16,7 +16,7 @@ namespace Estacionamento_console
             Car car = new Car();
             Driver driver = new Driver();
 
-            string name;
+            
             int opcao = 0;
 
             while (opcao != 6)
@@ -31,24 +31,28 @@ namespace Estacionamento_console
                 {
                     case 1:
 
-                        car.RegisterDriver();
-                      
-                        break;
+                     car.RegisterDriver();
+
+                      break;
                     case 2:
 
-                        car.ParkedVehicles();
+                    car.ParkedVehicles();
+
                         break;
                     case 3:
+
                         car.Exit();
+
                         break;
                     case 4:
 
-                       car.SearchVehicles();
+                     car.SearchVehicles();
 
                         break;
                     case 5:
 
-                       car.ListVehicles();
+                        car.ListVehicles();
+
                         break;
 
                 }
