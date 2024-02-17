@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 using Estacionamento_console;
 using Estacionamento_console.Entities.Enums;
+using Estacionamento_console.Entities.Exceptions;
+
 
 namespace Estacionamento_console.Entities
 {
@@ -13,23 +16,30 @@ namespace Estacionamento_console.Entities
         public string Model { get; set; }
         Color Color { get; set; }
         public string Plate { get; set; }
-        public string EntryTime { get; set; }
+        public DateTime EntryTime { get; set; }
         public string ExitTime { get; set; }
+      
+
+
         List<Car> list = new List<Car>();
 
 
         public Car() { }
 
-        public Car(string name, string cpf, string model, Color color, string plate) : base(name, cpf)
+
+        public Car(string name, string cpf, string model, Color color, string plate,DateTime entrytime) : base(name, cpf)
         {
             Model = model;
             Color = color;
             Plate = plate;
-            Entrytime();
+            EntryTime = entrytime;
+            
         }
 
         public void Menu()
         {
+
+
             Console.WriteLine("BEM VINDO AO MENU ");
             Console.WriteLine("1- Cadastrar Motorista");
             Console.WriteLine("2- Veiculos Estacionados");
@@ -39,18 +49,6 @@ namespace Estacionamento_console.Entities
             Console.WriteLine("6- SAIR");
             Console.Write("Digite uma opção:");
         }
-
-        public void Entrytime()
-        {
-            EntryTime = DateTime.Now.ToString();
-            Console.WriteLine(EntryTime);
-        }
-
-        public void RegisterExit()
-        {
-            ExitTime = DateTime.Now.ToString();
-        }
-
         public void RegisterDriver()
         {
             Console.WriteLine("CADASTRO DE MOTORISTA:");
@@ -59,15 +57,26 @@ namespace Estacionamento_console.Entities
             string Name = Console.ReadLine();
             Console.WriteLine("Digite o CPF do motorista:");
             string Cpf = Console.ReadLine();
+            if(Cpf.Length < 11)
+            {
+                throw new DomainException("Cpf Invalido!");
+            }
             Console.WriteLine("Digite o modelo do veiculo:");
             string Model = Console.ReadLine();
             Console.WriteLine("Digite a cor do veiculo:");
-            Color Color = Enum.Parse<Color>(Console.ReadLine());
+            Color Color1 = Enum.Parse<Color>(Console.ReadLine());
             Console.WriteLine("Digite a placa do veiculo:");
             string Plate = Console.ReadLine();
+            if (Plate.Length < 7)
+            {
+                throw new DomainException("Placa do carro invalida!");
+               
+            }
             Console.Write("Data e Horario de Entrada:");
+            DateTime Entrytime = DateTime.ParseExact(Console.ReadLine(),"HH:mm",CultureInfo.InvariantCulture);
+           
 
-            list.Add(new Car(Name, Cpf, Model, Color, Plate));
+            list.Add(new Car(Name, Cpf, Model, Color, Plate, Entrytime));
 
             Console.WriteLine();
             Console.WriteLine("Veiculo Cadastrado!");
@@ -115,7 +124,7 @@ namespace Estacionamento_console.Entities
         {
             Console.WriteLine("Digite o nome do motorista ou a placa do carro:");
             string Exit = Console.ReadLine();
-            Console.WriteLine();
+            Console.Clear();
 
             foreach (var obj in list)
             {
@@ -132,8 +141,15 @@ namespace Estacionamento_console.Entities
 
                     if (decision == 's' || decision == 'S')
                     {
-                        Console.WriteLine("Saida Registrada!");
-                        obj.RegisterExit();
+                        Console.Write("Digite o harario de saida:");
+                        obj.ExitTime = Console.ReadLine();
+                        Console.WriteLine();
+
+
+                        Payment(obj.EntryTime,obj.ExitTime);
+
+                        
+
                     }
                     else
                     {
@@ -148,6 +164,25 @@ namespace Estacionamento_console.Entities
             Console.WriteLine();
         }
 
+
+        public void Payment( DateTime entrytime,string exitTimeString)
+        {
+            
+           
+            DateTime exitTime = DateTime.Parse(exitTimeString);
+
+            TimeSpan permanencia = exitTime - entrytime;
+            double horas = permanencia.TotalHours;
+
+            double valorAPagar = horas * 10.00;
+            Console.WriteLine("Ticket:");
+            Console.WriteLine($"Tempo de permanência: {horas.ToString("F2",CultureInfo.InvariantCulture)} horas");
+            Console.WriteLine($"Valor a pagar: R${valorAPagar.ToString("F2",CultureInfo.InvariantCulture)}");
+        }
+
+
+
+
         public void SearchVehicles()
         {
             Console.WriteLine("Digite o nome do motorista ou a placa do carro:");
@@ -157,16 +192,22 @@ namespace Estacionamento_console.Entities
             {
                 if (search == obj.Name || search == obj.Plate)
                 {
-                    Console.WriteLine("Motorista Encontrado!");
-                    Console.WriteLine(obj);
+                    if (obj.ExitTime == null)
+                    {
+                        Console.WriteLine("Motorista Encontrado!");
+                        Console.WriteLine(obj);
+                    }else
+                    {
+                        Console.WriteLine("Motorista encontrado!");
+                        Console.WriteLine(obj);
+                        Payment(obj.EntryTime, obj.ExitTime);
+                    }
                 }
-                else
-                {
-                    Console.WriteLine("Placa ou motorista invalidos!");
-                }
-                Console.ReadKey();
-                Console.Clear();
+              
+               
             }
+            Console.ReadKey();
+            Console.Clear();
         }
 
         public void ListVehicles()
@@ -184,6 +225,7 @@ namespace Estacionamento_console.Entities
                     {
                         Console.WriteLine(obj);
                         Console.WriteLine("Horario de saida:" + obj.ExitTime);
+                        Payment(obj.EntryTime, obj.ExitTime);
                         Console.WriteLine();
                     }
                     else
@@ -196,9 +238,9 @@ namespace Estacionamento_console.Entities
                     }
                 }
             }
-            else 
+            else
             {
-                Console.WriteLine("Nenhuma Saida Registrad!"); 
+                Console.WriteLine("Nenhuma Saida Registrad!");
             }
 
             Console.ReadKey();
@@ -215,9 +257,10 @@ namespace Estacionamento_console.Entities
                    "Data e Horario de Entrada:" +
                    EntryTime;
         }
-
-
-
-
     }
+
 }
+
+
+    
+

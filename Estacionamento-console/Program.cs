@@ -12,56 +12,66 @@ namespace Estacionamento_console
     {
         static void Main(string[] args)
         {
-            
+
             Car car = new Car();
             Driver driver = new Driver();
 
-            
+
             int opcao = 0;
 
-            while (opcao != 6)
-            {
-                
-                car.Menu();
-                opcao = int.Parse(Console.ReadLine());
-                
-                Console.Clear();
-
-                switch (opcao)
+           
+                while (opcao != 6)
                 {
-                    case 1:
+                try
+                {
+                    car.Menu();
+                    opcao = int.Parse(Console.ReadLine());
 
-                     car.RegisterDriver();
+                    Console.Clear();
 
-                      break;
-                    case 2:
+                    switch (opcao)
+                    {
+                        case 1:
 
-                    car.ParkedVehicles();
+                            car.RegisterDriver();
 
-                        break;
-                    case 3:
+                            break;
+                        case 2:
 
-                        car.Exit();
+                            car.ParkedVehicles();
 
-                        break;
-                    case 4:
+                            break;
+                        case 3:
 
-                     car.SearchVehicles();
+                            car.Exit();
 
-                        break;
-                    case 5:
+                            break;
+                        case 4:
 
-                        car.ListVehicles();
+                            car.SearchVehicles();
 
-                        break;
+                            break;
+                        case 5:
+
+                            car.ListVehicles();
+
+                            break;
+
+                    }
 
                 }
-
-
+                catch (Exception e)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine(e.Message);
+                    Console.ReadKey();
+                    Console.Clear();
+                }
 
             }
+            
         }
-
-     
     }
-}
+
+} 
+
